@@ -47,7 +47,7 @@ class Collection {
     }    
   }
 
-  remove(id) {
+  async remove(id) {
     console.log('remove called: ', id);
     try{
       let recordToDestroy = await this.model.destroy({
@@ -58,7 +58,9 @@ class Collection {
       recordToDestroy.destroy();
       return recordToUpdate;
     } catch (err){
-      return -1
+      return err;
     }
   }
 }
+
+module.exports = Collection;
