@@ -2,7 +2,7 @@
 
 const express = require('express');
 
-const {foodCollection} = require('../models/Collection.js');
+const {FoodCollection} = require('../models');
 
 const router = express.Router();
 
@@ -10,19 +10,19 @@ router.get('/food', read);
 router.get('/food/:id', read);
 router.post('/food', create);
 router.put('/food/:id', update);
-router.put('/food/:id', updateAll);
 router.delete('/food/:id', remove);
 
 async function read(req, res, next) {
   try{
-    console.log('GET HIT');
     let { id } = req.params;
+    console.log('GET HIT:', id ? "id = " + id : "all requested");
     let foods;
     if (id) {
-      foods = await foodCollection.read(id);
+      foods = await FoodCollection.read(id);
     } else {
-      foods = await foodCollection.read();
+      foods = await FoodCollection.read();
     }
+    if(!foods) throw "Error Reading Food Collection";
     res.status(200).json(foods);
   } catch (err){
     res.status(404).send(err);
@@ -33,7 +33,9 @@ async function create(req, res, next) {
   console.log('POST HIT: ');
   try{
     let createObj = req.body;
-    let createdItem = await foodCollection.create(createObj);
+    let createdItem = await FoodCollection.create(createObj);
+
+    if(!createdItem) throw "Error Creating Item Food Collection";
     res.status(201).json(createdItem);
   }catch (err){
     res.status(500).send(err);
@@ -46,8 +48,12 @@ async function update(req, res) {
     let {id} = req.params;
     let updateObj = req.body;
     if(id){
-      let updatedItem = await foodCollection.update(id, updateObj);
+      let updatedItem = await FoodCollection.update(id, updateObj);
+
+      if(!updatedItem) throw "Error Updating Item Food Collection";
       res.status(202).json(updatedItem);
+    } else {
+      throw "Error Updating Item Food Collection: No ID Given";
     }
   } catch (err){
     res.status(500).send(err);
@@ -57,10 +63,13 @@ async function update(req, res) {
 
 async function remove(req, res) {
   try{
-    console.log('DELETE HIT');
     let {id} = req.params;
-    let deletedItem = await foodCollection.delete(id);
-    res.status(204).send(deletedItem);
+    console.log('DELETE HIT: id -', id);
+    let tempObj = await FoodCollection.read(id);
+    let deletedItem = await FoodCollection.remove(id);
+
+    if(!deletedItem) throw "Error Deleting Item Food Collection";
+    res.status(202).send({deletedObject: tempObj.results});
   } catch (err){
     res.status(500).send(err);
   }

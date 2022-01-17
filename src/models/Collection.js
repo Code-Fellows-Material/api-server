@@ -4,9 +4,10 @@ class Collection {
 
   constructor(model){
     this.model = model;
+    console.log("collection created for:", model);
   }
 
-  async read(id){
+  async read(id = null){
     try{
       console.log('Read: ', this.model);
       let record;
@@ -16,12 +17,13 @@ class Collection {
         record = await this.model.findAll();
       } 
       let readObject = {
-        count: record ? readVal.length : 1,
+        count: record ? record.length : 1,
         results: record,
       };
       return readObject;
     } catch (err){
-      return -1;
+      console.error(err);
+      return false;
     }
   }
 
@@ -30,20 +32,22 @@ class Collection {
       const record = await this.model.create(data);
       return record;
     } catch(err){
-      return -1;
+      console.error(err);
+      return false;
     }
   }
 
   async update(id, newRecord) {
     console.log('update called: ', id);
     try{
-      let recordToUpdate = await this.model.findById(id);
+      let recordToUpdate = await this.model.findOne({where: {id}});
       //This method is faster due not having to search the db
       recordToUpdate.set(newRecord);
       await recordToUpdate.save(); 
       return recordToUpdate;
     } catch (err){
-      return -1;
+      console.error(err);
+      return false;
     }    
   }
 
@@ -55,10 +59,10 @@ class Collection {
           id: id,
         },
       });
-      recordToDestroy.destroy();
-      return recordToUpdate;
+      return recordToDestroy;
     } catch (err){
-      return err;
+      console.error(err);
+      return false;
     }
   }
 }
