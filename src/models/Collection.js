@@ -7,18 +7,26 @@ class Collection {
     console.log("collection created for:", model);
   }
 
-  async read(id = null){
+  async read(id){
     try{
       console.log('Read: ', this.model);
       let record;
+      let count = 0;
       if (id) {
         record = await this.model.findOne({where: {id}});
+        if(!record) {
+          record = {};
+          count = 0;
+        } else {
+          count = 1;
+        }
       } else {
         record = await this.model.findAll();
+        count = record.length;
       } 
       let readObject = {
-        count: record ? record.length : 1,
-        results: record,
+        count,
+        results: count > 0 ? record : [],
       };
       return readObject;
     } catch (err){
@@ -38,11 +46,11 @@ class Collection {
   }
 
   async update(id, newRecord) {
-    console.log('update called: ', id);
+    console.log('update called: ', id, newRecord);
     try{
       let recordToUpdate = await this.model.findOne({where: {id}});
       //This method is faster due not having to search the db
-      recordToUpdate.set(newRecord);
+      recordToUpdate.update(newRecord);
       await recordToUpdate.save(); 
       return recordToUpdate;
     } catch (err){
