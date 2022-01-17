@@ -16,6 +16,16 @@ afterAll(async () => {
 
 describe('Testing the dog router', () => {
 
+  it('should CREATE one from dogs data', async () => {
+    const response = await request.post('/dog').send({type: "test", size: "test"});
+    expect(response.status).toEqual(201);
+  });
+
+  it('should UPDATE one from dogs data', async () => {
+    const response = await request.put('/dog/1').send({type: "test", size: "test"});
+    expect(response.status).toEqual(202);
+  });
+
   it('should read ALL from dogs data', async () => {
     const response = await request.get('/dog');
 
@@ -32,18 +42,8 @@ describe('Testing the dog router', () => {
     expect(response.body.results).toBeDefined();
   });
 
-  it('should CREATE one from dogs data', async () => {
-    const response = await request.post('/dog').send({type: "test", size: "test"});
-    expect(response.status).toEqual(201);
-  });
-
-  it('should UPDATE one from dogs data', async () => {
-    const response = await request.put('/dog/1').send({type: "test"});
-    expect(response.status).toEqual(202);
-  });
-
   it('should DELETE one from dogs data', async () => {
     const response = await request.delete('/dog/1');
-    expect(response.status).toEqual(204);
+    expect(response.status).toEqual(202);
   });
 });
