@@ -1,0 +1,32 @@
+{
+  "name": "basic-api-server",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest --verbose --coverage",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Kellen-Linse/basic-api-server.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Kellen-Linse/basic-api-server/issues"
+  },
+  "homepage": "https://github.com/Kellen-Linse/basic-api-server#readme",
+  "dependencies": {
+    "dotenv": "^11.0.0",
+    "express": "^4.17.2",
+    "jest": "^27.4.7",
+    "pg": "^8.7.1",
+    "sequelize": "^6.13.0",
+    "sequelize-cli": "^6.3.0",
+    "sqlite3": "^5.0.2",
+    "supertest": "^6.2.1"
+  },
+  "devDependencies": {},
+  "description": ""
+}
